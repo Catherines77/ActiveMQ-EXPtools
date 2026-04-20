@@ -1,0 +1,22 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="activemq-exp:jar">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="activemq-exp.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="activemq-exp" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../apache-maven-3.9.7-bin/repository/org/fusesource/hawtbuf/hawtbuf/1.11/hawtbuf-1.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../apache-maven-3.9.7-bin/repository/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../apache-maven-3.9.7-bin/repository/org/apache/activemq/activemq-client/5.15.15/activemq-client-5.15.15.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../apache-maven-3.9.7-bin/repository/org/apache/geronimo/specs/geronimo-j2ee-management_1.1_spec/1.0.1/geronimo-j2ee-management_1.1_spec-1.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../apache-maven-3.9.7-bin/repository/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../apache-maven-3.9.7-bin/repository/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../apache-maven-3.9.7-bin/repository/org/apache/httpcomponents/httpcore/4.4.13/httpcore-4.4.13.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../apache-maven-3.9.7-bin/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../apache-maven-3.9.7-bin/repository/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../apache-maven-3.9.7-bin/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../apache-maven-3.9.7-bin/repository/com/formdev/flatlaf/3.2/flatlaf-3.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
