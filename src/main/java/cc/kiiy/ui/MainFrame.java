@@ -24,7 +24,7 @@ public class MainFrame extends JFrame {
     private VulnerabilityService vulnerabilityService;
     
     public MainFrame() {
-        setTitle("ActiveMQ-EXPtools-1.0 - by kiiy(https://github.com/Catherines77/ActiveMQ-EXPtools)");
+        setTitle("ActiveMQ-EXPtools-1.1 - by kiiy(https://github.com/Catherines77/ActiveMQ-EXPtools)");
         setSize(1100, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
