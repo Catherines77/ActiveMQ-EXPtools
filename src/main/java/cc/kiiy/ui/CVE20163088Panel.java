@@ -46,7 +46,7 @@ public class CVE20163088Panel extends JPanel {
     private JPanel createCronPanel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         JPanel configPanel = new JPanel(new GridBagLayout());
-        configPanel.setBorder(new TitledBorder("CVE-2016-3088 (文件写入 / 反弹 Shell) 漏洞利用"));
+        configPanel.setBorder(new TitledBorder("cron写入不需要用户名密码，但需要目标出网"));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
@@ -115,7 +115,7 @@ public class CVE20163088Panel extends JPanel {
         Font font = new Font("Microsoft YaHei UI", Font.PLAIN, 14);
 
         JPanel configPanel = new JPanel(new BorderLayout(5, 5));
-        configPanel.setBorder(new TitledBorder("CVE-2016-3088 (Webshell 写入) 漏洞利用"));
+        configPanel.setBorder(new TitledBorder("webshell写入需要用户名密码，不需要目标出网"));
 
         webshellContentArea = new JTextArea(10, 50);
         webshellContentArea.setFont(font);

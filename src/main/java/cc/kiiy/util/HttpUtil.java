@@ -7,13 +7,45 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
+import java.security.cert.X509Certificate;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class HttpUtil {
     
     static {
         // 允许 HttpURLConnection 设置受限的请求头，例如 Origin
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+        
+        // 忽略 HTTPS 证书校验和主机名校验
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() { return null; }
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) { }
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) { }
+                }
+            };
+
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+            HostnameVerifier allHostsValid = new HostnameVerifier() {
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            };
+            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     private static ProxyConfig proxyConfig;
@@ -54,6 +86,14 @@ public class HttpUtil {
     }
     
     private static HttpResponse sendRequest(String urlStr, String method, String body, int connectTimeout, int readTimeout, String encodedCredentials, Map<String, String> requestHeaders) throws Exception {
+        return sendRequestWithRedirect(urlStr, method, body, connectTimeout, readTimeout, encodedCredentials, requestHeaders, 0);
+    }
+
+    private static HttpResponse sendRequestWithRedirect(String urlStr, String method, String body, int connectTimeout, int readTimeout, String encodedCredentials, Map<String, String> requestHeaders, int redirectCount) throws Exception {
+        if (redirectCount > 5) {
+            throw new Exception("Too many redirects");
+        }
+        
         URL url = new URL(urlStr);
         
         HttpURLConnection conn;
@@ -84,7 +124,7 @@ public class HttpUtil {
         }
         conn.setConnectTimeout(connectTimeout);
         conn.setReadTimeout(readTimeout);
-        conn.setInstanceFollowRedirects(false);
+        conn.setInstanceFollowRedirects(false); // 我们自己处理重定向
         
         if (encodedCredentials != null && !encodedCredentials.isEmpty()) {
             conn.setRequestProperty("Authorization", "Basic " + encodedCredentials);
@@ -112,6 +152,23 @@ public class HttpUtil {
         }
         
         int responseCode = conn.getResponseCode();
+        
+        // 处理 301/302 重定向
+        if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP
+            || responseCode == HttpURLConnection.HTTP_MOVED_PERM
+            || responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
+            String newUrl = conn.getHeaderField("Location");
+            if (newUrl != null) {
+                // 如果是相对路径，拼接到完整的 URL
+                if (!newUrl.startsWith("http")) {
+                    URL currentUrl = new URL(urlStr);
+                    newUrl = new URL(currentUrl, newUrl).toString();
+                }
+                // 跟进重定向，保持 method（GET等）和 header 不变，body清空避免二次提交
+                return sendRequestWithRedirect(newUrl, "GET", null, connectTimeout, readTimeout, encodedCredentials, requestHeaders, redirectCount + 1);
+            }
+        }
+
         String responseBody = "";
         
         try {
