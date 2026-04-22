@@ -11,7 +11,7 @@ jdk8启动，Openwire默认端口61616，有时目标环境可能没有开放。
 
 CVE-2023-46604和CVE-2026-34197在漏洞检测时就会发送exp，因此没有单独列出来，注意查看BeanXML服务端是否收到请求。
 
-![image-20260422153823469](C:\Users\13903\AppData\Roaming\Typora\typora-user-images\image-20260422153823469.png)
+![image-20260422153823469](./images/3.png)
 
 ## 部分漏洞利用注意事项
 
