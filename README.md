@@ -9,7 +9,11 @@
 
 jdk8启动，Openwire默认端口61616，有时目标环境可能没有开放。apache activemq默认用户名密码admin:admin。BeanXML设置面板可生成执行对应命令的恶意的xml。有问题欢迎提Issue。
 
-## 漏洞利用说明
+CVE-2023-46604和CVE-2026-34197在漏洞检测时就会发送exp，因此没有单独列出来，注意查看BeanXML服务端是否收到请求。
+
+![image-20260422153823469](C:\Users\13903\AppData\Roaming\Typora\typora-user-images\image-20260422153823469.png)
+
+## 部分漏洞利用注意事项
 
 ### CVE-2015-5254
 
