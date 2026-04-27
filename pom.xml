@@ -8,6 +8,14 @@
   <packaging>jar</packaging>
   <dependencies>
     <dependency>
+      <groupId>jmg</groupId>
+      <artifactId>jmg-sdk</artifactId>
+      <version>1.0.9</version>
+      <scope>system</scope>
+      <systemPath>D:\apache-maven-3.9.7-bin\repository\jmg\jmg-sdk\1.0.9\jmg-sdk-1.0.9.jar</systemPath>
+    </dependency>
+
+    <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
       <version>3.2.1</version>

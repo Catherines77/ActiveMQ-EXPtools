@@ -75,6 +75,10 @@ public class HttpUtil {
         return sendRequest(urlStr, "POST", body, connectTimeout, readTimeout, null, headers);
     }
     
+    public static HttpResponse sendPost(String urlStr, String body, Map<String, String> headers, String encodedCredentials, int connectTimeout, int readTimeout) throws Exception {
+        return sendRequest(urlStr, "POST", body, connectTimeout, readTimeout, encodedCredentials, headers);
+    }
+    
     public static HttpResponse sendPut(String urlStr, String body, int connectTimeout, int readTimeout) throws Exception {
         return sendRequest(urlStr, "PUT", body, connectTimeout, readTimeout, null, null);
     }

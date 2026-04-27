@@ -9,7 +9,7 @@
 
 jdk8启动，Openwire默认端口61616，有时目标环境可能没有开放。apache activemq默认用户名密码admin:admin。BeanXML设置面板可生成执行对应命令的恶意的xml。有问题欢迎提Issue。
 
-CVE-2023-46604和CVE-2026-34197在漏洞检测时就会发送exp，因此没有单独列出来，注意查看BeanXML服务端是否收到请求。
+CVE-2023-46604和CVE-2026-34197在漏洞检测时就会发送exp，注意查看BeanXML服务端是否收到请求。
 
 ![image-20260422153823469](./images/3.png)
 
@@ -31,6 +31,10 @@ java-chains生成反序列化数据，验证漏洞时可以用URLDNS
 
 自定义webshell写入时，冰蝎马写入会报500，哥斯拉正常。工具连接时注意要加上认证头部
 
+### CVE-2026-34197
+
+1.2版本集成了jmg，增加了内存马注入功能。当前版本的jmg在生成jetty中间件，组件类型为jakarta时，会出现报错，稍微修改了一下源码。
+
 **致谢**
 
 https://github.com/URJACK2025/CVE-2022-41678
@@ -38,3 +42,5 @@ https://github.com/URJACK2025/CVE-2022-41678
 https://github.com/vulhub/vulhub
 
 https://github.com/vulhub/java-chains
+
+https://github.com/pen4uin/java-memshell-generator

