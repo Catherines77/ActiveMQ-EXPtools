@@ -35,17 +35,17 @@ java-chains生成反序列化数据，验证漏洞时可以用URLDNS
 
 首先在MemShellParty生成对应内存马base64字符串https://party.mem.mk/ui
 
-![image-20260508110638599](.\images\4.png)
+![image-20260508110638599](./images/4.png)
 
 然后来到java-chains，找到Generate-OtherPayload，选择自定义字节码
 
-![0](.\images\3.png)
+![0](./images/3.png)
 
 根据jdk版本选择base64解码方法，默认为decodeFromString方法，而vulhub中的CVE-2026-34197靶场需要选择java.util.Base64
 
 最后填入内存马Base64字符串，点击生成即可
 
-![image-20260508110858921](.\images\5.png)
+![image-20260508110858921](./images/5.png)
 
 Filter，Listener或Servlet类型，在内存马连接地址处需要加上路径/admin/，/api/，以及认证头部，handler无需路径以及认证头部字段
 
