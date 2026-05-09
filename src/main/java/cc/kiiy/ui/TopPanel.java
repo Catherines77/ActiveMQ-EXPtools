@@ -86,6 +86,22 @@ public class TopPanel extends JPanel {
         gbc.gridwidth = 3;
         formPanel.add(httpServerField, gbc);
         
+        httpServerField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { updateXmlUrl(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { updateXmlUrl(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { updateXmlUrl(); }
+            
+            private void updateXmlUrl() {
+                Container parent = TopPanel.this.getParent();
+                while (parent != null && !(parent instanceof MainFrame)) {
+                    parent = parent.getParent();
+                }
+                if (parent instanceof MainFrame) {
+                    ((MainFrame) parent).updateCVE202640466DiscoveryContent();
+                }
+            }
+        });
+        
         JLabel openWireLabel = new JLabel(" OpenWire端口:");
         openWireLabel.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
         gbc.gridx = 4;

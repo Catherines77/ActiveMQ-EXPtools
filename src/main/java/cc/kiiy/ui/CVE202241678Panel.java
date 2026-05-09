@@ -13,7 +13,7 @@ public class CVE202241678Panel extends JPanel {
     private JTextField customWebshellField;
     private JButton writeWebshellButton;
     private JButton executeButton;
-    private JTextPane outputArea;
+    private JTextArea outputArea;
 
     public CVE202241678Panel() {
         initUI();
@@ -94,8 +94,13 @@ public class CVE202241678Panel extends JPanel {
 
         add(inputPanel, BorderLayout.NORTH);
 
-        outputArea = new JTextPane();
+        outputArea = new JTextArea();
         outputArea.setEditable(false);
+        outputArea.setLineWrap(true);
+        outputArea.setWrapStyleWord(true);
+        outputArea.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+        // Force the JTextArea to behave more like a standard text field for selection
+        outputArea.setFocusable(true);
         outputArea.setText("支持log4j2和jfr两种方式，auto默认使用log4j2。\n如果想重新写入webshell，请将webshell路径输入框置空\n执行命令默认使用工具自带的webshell\n自定义webshell连接时需要加上认证头部Authorization: Basic b64encode(uname:pass)");
         JScrollPane scrollPane = new JScrollPane(outputArea);
         add(scrollPane, BorderLayout.CENTER);
