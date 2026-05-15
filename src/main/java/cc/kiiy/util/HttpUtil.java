@@ -102,9 +102,23 @@ public class HttpUtil {
         
         HttpURLConnection conn;
         if (proxyConfig != null && proxyConfig.isEnabled()) {
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyConfig.getHost(), proxyConfig.getPort()));
+            Proxy.Type proxyType = "SOCKS".equalsIgnoreCase(proxyConfig.getType()) ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
+            Proxy proxy = new Proxy(proxyType, new InetSocketAddress(proxyConfig.getHost(), proxyConfig.getPort()));
+            
+            if (proxyConfig.getUsername() != null && !proxyConfig.getUsername().isEmpty()) {
+                java.net.Authenticator.setDefault(new java.net.Authenticator() {
+                    @Override
+                    protected java.net.PasswordAuthentication getPasswordAuthentication() {
+                        return new java.net.PasswordAuthentication(proxyConfig.getUsername(), proxyConfig.getPassword().toCharArray());
+                    }
+                });
+            } else {
+                java.net.Authenticator.setDefault(null);
+            }
+            
             conn = (HttpURLConnection) url.openConnection(proxy);
         } else {
+            java.net.Authenticator.setDefault(null);
             conn = (HttpURLConnection) url.openConnection();
         }
         
