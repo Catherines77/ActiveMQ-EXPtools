@@ -144,7 +144,7 @@ public class TopPanel extends JPanel {
         formPanel.add(vulnLabel, gbc);
 
         String[] vulns = {"CVE-2015-5254", "CVE-2016-3088", "CVE-2022-41678",
-                "CVE-2023-46604", "CVE-2024-32114", "CVE-2026-34197", "CVE-2026-40466", "All"};
+                "CVE-2023-46604", "CVE-2024-32114", "CVE-2026-34197", "CVE-2026-40466", "CVE-2026-42588", "All"};
         vulnComboBox = new JComboBox<>(vulns);
         vulnComboBox.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
         gbc.gridx = 5;
