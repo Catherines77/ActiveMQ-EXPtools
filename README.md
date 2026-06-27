@@ -59,6 +59,4 @@ https://github.com/ReaJason/MemShellParty
 
 https://github.com/1diot9/MyJavaSecStudy/blob/5504868a7cba4bf674fe6974fe8f613e556e5d42/Apache/ActiveMQ/CVE-2026-40466/poc/CVE-2026-40466_HTTP_Discovery_RCE_Analysis.md
 
-https://github.com/Kai-One001/cve-/blob/main/CVE-2026-42588_Apache_ActiveMQ_Jolokia_RCE.py
-
 https://github.com/vulhub/java-chains
